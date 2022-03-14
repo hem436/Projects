@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>User Login</h1>
+    <form class="signupform" action="/signup" method="post">
+      <label for="username">Username:</label>
+      <input type="text" name="username" required><br>
+      <label for="password">Enter a Password:</label>
+      <input type="password" name="password"  required>
+      <input type="submit" value="Signup">
+      <br><h4 style="font-family: zillaslab,palatino,Palatino Linotype,serif;color:red">{{error}}</h4>
+      Already have an account? <a href="/">Login</a>
+    </form>
+  </body>
+</html>

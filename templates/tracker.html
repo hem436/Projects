@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+      <h4>Hey {{user.username}}</h4>
+      <h1>Tracker: {{tracker.name}}</h1>
+      <a href="/main">Home</a>|<a href="/logout">Logout</a>
+      {% if chart %}
+      <img src="{{chart}}">
+      {% else %}
+      <form class="" action="/tracker/{{tracker.tracker_id}}" method="post">
+        <select class="time" name="period">
+          <option value="Today">Today</option>
+          <option value="1Month">This Month</option>
+          <option value="3Month">Three Month</option>
+        </select>
+        <button type="submit" name="button">GO</button>
+      </form>
+      {% endif %}
+      <h3>Log Entries</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>S.no</th><th>Timestamp</th><th>Value</th><th>Note</th><th>Actions</th>
+          </tr>
+          {% for l in tracker.logs %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td>{{l.log_datetime.strftime('(%d/%b/%Y, %H:%M:%S)')}}</td>
+            <td>{{l.log_value}}</td>
+            <td>{{l.note}}</td>
+            <td><button type="button" name="button"><a href="/{{l.log_id}}/log/update">Edit</a></button>|
+              <button type="button" name="button"><a href="/{{l.log_id}}/log/delete">Delete</a></button></td>
+          </tr>
+          {% endfor %}
+        </thead>
+      </table>
+      <button type="button"><a href="/{{tracker.tracker_id}}/log/add"><h1>ADD LOG</h1> </a></button>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h2>Update the log with id {{log.log_id}}</h2>
+    <form class="update_log" action="/{{log.log_id}}/log/update" method="post">
+      <label for="value">Timestamp:</label><input type="datetime" name="time" value="{{log.log_datetime}}"><br>
+      <label for="type">Tracker type</label><input type="text" name="type" value="{{log.parent.type}}" disabled><br>
+      {% if log.parent.type=="Multiple-choice" -%}
+      <label for="value">Update value of log:</label><select name="value" value="{{log.value}}">
+        {% for i in log.parent.settings.split(',') -%}
+        <option value={{i}}>{{i}}</option>
+        {% endfor %}
+      </select><br>
+      {% else %}
+      <label for="value">Update value of log:</label><input type="number" name="value" required><br>
+      {% endif %}
+      <label for="note">Update note for log:</label><input type="text" name="note" value="{{log.note}}"><br>
+      <button type="submit" name="submit">Add log</button>
+    </form>
+  </body>
+</html>

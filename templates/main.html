@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title></title>
+  </head>
+  <body>
+
+      <h1>Hello {{user.username}}, Welcome to Quantified Self.</h1>
+      <a href="/logout">Logout</a>
+      <table class='tracker_table'>
+        <thead>
+          <tr>
+            <th>S.no</th><th>Tracker name</th><th>Tracker description</th><th>New Log</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in user.trackers %}
+          <tr>
+            <td>{{loop.index}}</td>
+            <td><a href="/tracker/{{t.tracker_id}}">{{t.name}}</a></td>
+            <td>{{t.desc}}</td>
+            <td><a href="/{{t.tracker_id}}/log/add">+</a></td>
+            <td>
+              <button type="button" value="edit"><a href="/tracker/{{t.tracker_id}}/update">Edit</a></button>
+              <button type="button" value="delete"><a href="/tracker/{{t.tracker_id}}/delete">Delete</a></button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="button" name="button"><a href="/tracker/add">ADD</a> </button>
+  </body>
+</html>

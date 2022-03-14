@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+
+  <body>
+    <h1>update a Tracker</h1><a href="/logout" class="logout">Logout</a><br><br>
+    <div class="update_tracker">
+      <form class="tracker_form" action="/tracker/update" method="post">
+        <h2>{{tracker.tracker_id}}</h2>
+        <label for="name">Enter name of tracker:</label><input type="text" name="name" value="{{tracker.name}}" required><br>
+        <label for="desc">Enter description of tracker:</label><input type="text" value="{{tracker.desc}}" name="desc"><br>
+        <label for="type">Select tracker type:</label><select name="type" >
+          <option value="Integer" {% if tracker.type=="Integer"%}selected{% endif %}>Integer</option>
+          <option value="Numeric" {% if tracker.type=="Numeric"%}selected{% endif %}>Numeric</option>
+          <option value="Multiple-choice" {% if tracker.type=="Multiple-choice"%}selected{% endif %}>Multiple-Choice</option>
+        </select><br>
+        <label for="settings">Settings(Separated by comma):</label><input type="text" name="settings" value="{{tracker.settings}}"><br>
+        <button type="submit" name="submit">Update Tracker</button>
+      </form>
+    </div>
+  </body>
+
+</html>

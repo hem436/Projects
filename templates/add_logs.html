@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Add a log</h1><a href="/main">Home</a> |
+    <a href="/logout" class="logout">Logout</a><br><br>
+    <div class="add_log">
+      <h2>Log for tracker: ({{t.tracker_id}}){{t.name}}</h2>
+      <form class="log_form" action="add" method="post">
+        <label for="value">Timestamp:</label><input type="text" name="time" value="{{ datetime.now().strftime('(%d/%b/%Y, %H:%M:%S)') }}"><br>
+        <label for="type">Tracker type</label><input type="text" name="type" value="{{t.type}}" disabled><br>
+        {% if t.type=="Multiple-choice" -%}
+        <label for="value">Select tracker type:</label><select name="value" >
+          {% for i in t.settings.split(',') -%}
+          <option value={{i}}>{{i}}</option>
+          {% endfor %}
+        </select><br>
+        {% else %}
+        <label for="value">Enter value of log:</label><input type="number" name="value" required><br>
+        {% endif %}
+        <label for="note">Enter note for log:</label><input type="text" name="note"><br>
+        <button type="submit" name="submit">Add log</button>
+      </form>
+    </div>
+  </body>
+</html>
