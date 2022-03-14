@@ -92,9 +92,10 @@ def add_tracker():
         try:
             db.session.add(add)
             db.session.commit()
+            return main()
         except Exception as e:
             db.session.rollback()
-            print('-------add_tracker_db_error-------',e)
+            return(f'-------add_tracker_db_error-------{e}')
     return render_template('add_tracker.html')
 
 @app.route('/tracker/<int:tracker_id>',methods=['GET','POST'])
@@ -161,4 +162,4 @@ def delete_log(log_id):
 #====================================================================================
 
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
