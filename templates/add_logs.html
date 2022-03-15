@@ -9,7 +9,7 @@
   <body>
     <div class="row">
       <div class="col-sm-3 d-flex justify-content-center">
-        <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
+        <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{t.parent.username}}</span>
       </div>
       <div class="col-sm-6 d-flex justify-content-center">
         <h1>Add a log</h1>
@@ -27,7 +27,7 @@
             <div class="form-group-row">
               <label for="col-sm-2 col-form-label col-form-label-sm value">Timestamp:</label>
               <div class="col-sm-4">
-              <input class="input" type="text" name="time" value="{{ datetime.now().strftime('(%d/%b/%Y, %H:%M:%S)') }}">
+              <input class="input" type="text" name="time" value="{{ datetime.now().strftime('%d/%b/%Y, %H:%M:%S.%f') }}">
               </div>
             </div>
               <label for="type">Tracker type:</label>
@@ -39,9 +39,12 @@
                 <option value={{i}}>{{i}}</option>
                 {% endfor %}
               </select><br><br>
-              {% else %}
-              <label for="value">Enter value of log:</label>
+              {% elif t.type=='Integer' %}
+              <label for="value">Enter value of log as integer:</label>
               <input type="number" name="value" required><br><br>
+              {% elif t.type=='Numeric' %}
+              <label for="value">Enter value of log as float:</label>
+              <input type="number" name="value" step='0.001' required><br><br>
               {% endif %}
               <label class="input-group">Enter note for log:</label>
               <textarea name="note" rows="2" cols="42" placeholder="Note/Remark"></textarea><br><br>

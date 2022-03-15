@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title></title>
   </head>
 
@@ -11,13 +12,13 @@
     </div>
     <h1>update a Tracker</h1><a href="/logout" class="h5 logout">Logout</a><br><br>
     <div class="update_tracker">
-      <form class="tracker_form" action="/tracker/update" method="post">
+      <form class="tracker_form" action="/tracker/{{tracker.tracker_id}}/update" method="post">
         <h2>{{tracker.tracker_id}}</h2>
         <label for="name">Enter name of tracker:</label><input type="text" name="name" value="{{tracker.name}}" required><br>
         <label for="desc">Enter description of tracker:</label><input type="text" value="{{tracker.desc}}" name="desc"><br>
         <label for="type">Select tracker type:</label><select name="type" >
           <option value="Integer" {% if tracker.type=="Integer"%}selected{% endif %}>Integer</option>
-          <option value="Numeric" {% if tracker.type=="Numeric"%}selected{% endif %}>Numeric</option>
+          <option value="Numeric" {% if tracker.type=="Numeric"%}selected{% endif %}>Numeric(Float)</option>
           <option value="Multiple-choice" {% if tracker.type=="Multiple-choice"%}selected{% endif %}>Multiple-Choice</option>
         </select><br>
         <label for="settings">Settings(Separated by comma):</label><input type="text" name="settings" value="{{tracker.settings}}"><br>

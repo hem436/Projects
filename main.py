@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, request,Flask,redirect
 from flask_login import LoginManager,login_user,login_required,logout_user,current_user
 from datetime import datetime
+from matplotlib import pyplot as plt
+from matplotlib.ticker import MaxNLocator
+import random as r
 
 #app initialization
 app = Flask(__name__)
@@ -57,7 +60,7 @@ def signup():
 def logout():
     logout_user()
     return login()
-#----------------------------
+#---------------------Not found error ----------------
 @app.route("/notfound/<error>")
 def notfound(error):
     return render_template('notfound.html',error=error)
@@ -84,9 +87,8 @@ def add_tracker():
         if type!='Integer' and type!='Numeric':
             if set=="":
                 return notfound('Tracker setting not valid, Multi-Choice should have setting separated by comma.')
-        else:
-            if set!="":
-                set=""
+        elif set!="":
+            set=""
         #-----------------
         add=tracker(user_id=u_id,name=name,desc=desc,type=type,settings=set)
         try:
@@ -96,13 +98,52 @@ def add_tracker():
         except Exception as e:
             db.session.rollback()
             return(f'-------add_tracker_db_error-------{e}')
-    return render_template('add_tracker.html')
+    return render_template('add_tracker.html',user=current_user)
 
 @app.route('/tracker/<int:tracker_id>',methods=['GET','POST'])
 @login_required
 def view_tl(tracker_id):
     t=tracker.query.get(tracker_id)
-    return render_template('tracker.html',tracker=t,user=current_user)
+    tl=log.query.filter(log.tracker_id==tracker_id).order_by(log.log_datetime)
+    x,y=[],[]
+
+    fig=plt.figure(figsize=(8,5))
+    ax = fig.gca()
+    if request.method=='POST' and request.form.get('period'):#to remove bug from direct function call
+        p=request.form.get('period')
+    else:
+        p='All'
+
+    if p=='Today':
+        comp=(i.log_datetime.strftime('%d/%m/%y')==datetime.today().strftime('%d/%m/%y'))
+    elif p=='1Month':
+        comp=(i.log_datetime.strftime('%m/%y')==datetime.today().strftime('%m/%y'))
+    elif p=='All':
+        comp=True
+    for i in tl:
+        if i.log_datetime.strftime('%d/%m/%y')==comp:
+            x.append(i.log_datetime)
+            if t.type=='Integer':
+                ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+                plt.ylabel('Int')
+                y.append(int(i.log_value))
+            elif t.type=='Numeric':
+                plt.ylabel('Float')
+                y.append(float(i.log_value))
+            else:
+                plt.ylabel('Settings')
+                y.append(i.log_value)
+
+
+
+    plt.plot(x,y,marker='o',color='b',linestyle='--')
+    plt.gcf().autofmt_xdate()
+    plt.savefig('static/chart.png')
+    if len(x)>0:
+        img='/static/chart.png'
+    else:
+        img=""
+    return render_template('tracker.html',tracker=t,chart=img)
 
 @app.route('/tracker/<int:tracker_id>/update',methods=['GET','POST'])
 @login_required#*************************
@@ -112,13 +153,26 @@ def update_tracker(tracker_id):
         return notfound('tracker_id_not_found')
     t=tracker.query.get(tracker_id)
     if request.method=='POST':
-        pass
+        try:
+            if request.form.get('name')!=t.name or request.form.get('desc')!=t.desc or request.form.get('type')!=request.form.get('settings'):
+                db.session.query(log).filter(log.tracker_id==tracker_id).delete()
+            updict={tracker.name:request.form['name'],tracker.desc:request.form['desc'],tracker.type:request.form['type'],tracker.settings:request.form['settings']}
+            print(updict)
+            db.session.query(tracker).filter(tracker.tracker_id==tracker_id).update(updict)
+            db.session.commit()
+            return main()
+        except:
+            print('-------------db_update_error--------------')
+            db.session.rollback()
 
     return render_template('update_tracker.html',tracker=t,user=current_user)
 
 @app.route('/tracker/<int:tracker_id>/delete',methods=['GET','POST'])
 @login_required
 def delete_tracker(tracker_id):
+    #Validarion
+    if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
+        return notfound('tracker_id_not_found')
     t=tracker.query.get(tracker_id)
     try:
         db.session.delete(t)
@@ -131,28 +185,45 @@ def delete_tracker(tracker_id):
 @app.route('/<int:tracker_id>/log/add',methods=['GET','POST'])
 @login_required
 def add_logs(tracker_id):
+    #Validarion
+    if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
+        return notfound('tracker_id_not_found')
+    t=tracker.query.get(tracker_id)
+    #EndV
     if request.method=='POST':
-        l=log(tracker_id=tracker_id,log_datetime=datetime.now(),note=request.form.get('note'),log_value=request.form.get('value'))
-        db.session.add(l)
-        db.session.commit()
-        return main()
-    return render_template('add_logs.html',t=tracker.query.get(tracker_id),datetime=datetime)
+        try:
+            value=request.form.get('value')
+            log_datetime=datetime.strptime(request.form.get("time"),'%d/%b/%Y, %H:%M:%S.%f')
+            l=log(tracker_id=tracker_id,log_datetime=log_datetime,note=request.form.get('note'),log_value=value)
+            db.session.add(l)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            print('-------------db_log_add_error--------------')
+        return view_tl(tracker_id)
+    return render_template('add_logs.html',t=t,datetime=datetime)
 
 @app.route('/<int:log_id>/log/update',methods=['GET','POST'])
 @login_required
 def update_log(log_id):
+    #validation
+    if (log_id,) not in db.session.query(log.log_id).all():
+        return notfound('log_id_not_found')
+    l=log.query.get(log_id)
+    #EndV
     if request.method=='POST':
         log_value=request.form.get("value")
         log_note=request.form.get("note")
-        log_datetime=datetime.strptime(request.form.get("time"),'%Y-%m-%d %H:%M:%S.%f')
-        print(log_datetime)
+        log_datetime=datetime.strptime(request.form.get("time"),'%d/%b/%Y, %H:%M:%S.%f')
+        #print(log_datetime)
         db.session.query(log).filter(log.log_id==log_id).update({'log_value':log_value,'note':log_note,'log_datetime':log_datetime})
         db.session.commit()
-    return render_template('update_logs.html',log=log.query.get(log_id))
+        return view_tl(l.tracker_id)
+    return render_template('update_logs.html',log=l)
 
 @app.route('/<int:log_id>/log/delete',methods=['GET','POST'])
 @login_required
-def delete_log(log_id):
+def delete_log(log_id):######deletevalidation####################
     l=log.query.get(log_id)
     t=l.tracker_id
     db.session.delete(l)

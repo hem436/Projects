@@ -8,7 +8,7 @@
   <body>
     <div class="row">
       <div class="col-sm-2 d-flex justify-content-center">
-        <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
+        <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{tracker.parent.username}}</span>
       </div>
       <div class="col-sm-6 d-flex justify-content-center">
         <h1>Tracker name: {{tracker.name}}</h1>
@@ -17,18 +17,23 @@
         <h3><a href="/main">Home</a>|<a href="/logout">Logout</a></h3>
       </div>
     </div>
-      {% if chart %}
-      <img src="{{chart}}">
-      {% else %}
-      <form class=" col-sm-4 offset-sm-8 d-flex justify-content-center" action="/tracker/{{tracker.tracker_id}}" method="post">
-        <select class="time" name="period">
-          <option value="Today">Today</option>
-          <option value="1Month">This Month</option>
-          <option value="3Month">Three Month</option>
-        </select>
-        <button type="submit" name="button">GO</button>
-      </form>
-      {% endif %}
+      <div class="row">
+        {% if chart %}
+        <div class="col-sm-8">
+        <img src="{{chart}}"></div>
+        <div class="col-sm-4 d-flex align-self-center">
+          <form class="form" action="/tracker/{{tracker.tracker_id}}" method="post">
+            <select class="time" name="period">
+              <option value="Today">Today</option>
+              <option value="1Month">This Month</option>
+              <option value="All">All time</option>
+            </select>
+            <button type="submit" name="button">GO</button>
+          </form>
+        </div>
+        {% else %}
+        {% endif %}
+      </div>
       <h3>Log Entries</h3>
       <table class="table table-bordered">
         <thead>

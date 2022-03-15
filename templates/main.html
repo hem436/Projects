@@ -20,7 +20,7 @@
       <table class='table table-bordered tracker_table'>
         <thead>
           <tr>
-            <th>S.no</th><th>Tracker name</th><th>Tracker description</th><th>New Log</th><th>Actions</th>
+            <th>S.no</th><th>Tracker name</th><th>Tracker description</th><th>Add new log</th><th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -29,7 +29,7 @@
             <td>{{loop.index}}</td>
             <td><a href="/tracker/{{t.tracker_id}}">{{t.name}}</a></td>
             <td>{{t.desc}}</td>
-            <td><a href="/{{t.tracker_id}}/log/add">+</a></td>
+            <td><a href="/{{t.tracker_id}}/log/add">{{t.type}}+</a></td>
             <td>
               <button type="button" value="edit"><a href="/tracker/{{t.tracker_id}}/update">Edit</a></button>
               <button type="button" value="delete"><a href="/tracker/{{t.tracker_id}}/delete">Delete</a></button>
