@@ -7,16 +7,19 @@
   </head>
   <body>
       <div class="row">
-        <div class="col-sm-2 d-flex justify-content-center">
+        <div class="col-sm-3 d-flex justify-content-center">
           <span class="align-self-center"><img src='static/userimg' width="40px" height="40px"/>{{user.username}}</span>
         </div>
         <div class="col-sm-6 d-flex justify-content-center">
           <h1>Welcome to Quantified Self</h1>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
+        <div class="col-sm-3 d-flex justify-content-center">
           <a class="h3" href="/logout" align="right">Logout</a>
         </div>
       </div>
+    <br><br>
+    <div class="row">
+      <div class="col-10 offset-1">
       <table class='table table-bordered tracker_table'>
         <thead>
           <tr>
@@ -38,6 +41,10 @@
           {% endfor %}
         </tbody>
       </table>
-      <button type="button" name="button"><a class="h4" href="/tracker/add">Add Tracker</a> </button>
+      <div class="text-center">
+        <button class="button" type="button" name="button"><a class="h4" href="/tracker/add">Add Tracker</a> </button>
+      </div>
+      </div>
+    </div>
   </body>
 </html>
