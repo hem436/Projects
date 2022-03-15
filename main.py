@@ -230,6 +230,9 @@ def update_log(log_id):
 @app.route('/<int:log_id>/log/delete',methods=['GET','POST'])
 @login_required
 def delete_log(log_id):######deletevalidation####################
+    #validation
+    if (log_id,) not in db.session.query(log.log_id).all():
+        return notfound('log_id_not_found')
     l=log.query.get(log_id)
     t=l.tracker_id
     db.session.delete(l)
