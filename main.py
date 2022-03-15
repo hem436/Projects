@@ -53,8 +53,7 @@ def signup():
             db.session.commit()
             return login()
         return redirect('/notfound/User already exists.')
-    return render_template("signup.html")
-#----------------------------
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -103,25 +102,35 @@ def add_tracker():
 @app.route('/tracker/<int:tracker_id>',methods=['GET','POST'])
 @login_required
 def view_tl(tracker_id):
+    #Validarion
+    if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
+        return notfound('tracker_id_not_found')
     t=tracker.query.get(tracker_id)
     tl=log.query.filter(log.tracker_id==tracker_id).order_by(log.log_datetime)
     x,y=[],[]
-
     fig=plt.figure(figsize=(8,5))
     ax = fig.gca()
     if request.method=='POST' and request.form.get('period'):#to remove bug from direct function call
         p=request.form.get('period')
+        if p=='Custom':
+            llim=request.form['customdatetimel']
+            hlim=request.form['customdatetimeh']
+            comp='%Y-%m-%dT%H:%M'
+        elif p=='Today':
+            llim=datetime.today().strftime('%d/%m/%y')
+            hlim=llim
+            comp='%d/%m/%y'
+        elif p=='1Month':
+            llim=datetime.today().strftime('%m/%y')
+            hlim=llim
+            comp='%m/%y'
+        elif p=='All':
+            llim,hlim,comp='','',''
     else:
-        p='All'
-
-    if p=='Today':
-        comp=(i.log_datetime.strftime('%d/%m/%y')==datetime.today().strftime('%d/%m/%y'))
-    elif p=='1Month':
-        comp=(i.log_datetime.strftime('%m/%y')==datetime.today().strftime('%m/%y'))
-    elif p=='All':
-        comp=True
+      llim,hlim,comp='','',''
+    
     for i in tl:
-        if i.log_datetime.strftime('%d/%m/%y')==comp:
+        if i.log_datetime.strftime(comp)>=llim and i.log_datetime.strftime(comp)<=hlim:
             x.append(i.log_datetime)
             if t.type=='Integer':
                 ax.yaxis.set_major_locator(MaxNLocator(integer=True))
@@ -133,9 +142,6 @@ def view_tl(tracker_id):
             else:
                 plt.ylabel('Settings')
                 y.append(i.log_value)
-
-
-
     plt.plot(x,y,marker='o',color='b',linestyle='--')
     plt.gcf().autofmt_xdate()
     plt.savefig('static/chart.png')

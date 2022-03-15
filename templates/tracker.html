@@ -18,21 +18,24 @@
       </div>
     </div>
       <div class="row">
-        {% if chart %}
+        
         <div class="col-sm-8">
-        <img src="{{chart}}"></div>
+        <img src="{{chart}}" alt="No data for specified range"></div>
         <div class="col-sm-4 d-flex align-self-center">
           <form class="form" action="/tracker/{{tracker.tracker_id}}" method="post">
             <select class="time" name="period">
               <option value="Today">Today</option>
               <option value="1Month">This Month</option>
               <option value="All">All time</option>
-            </select>
+              <option value="Custom">Custom range</option>
+            </select><br><br>
+            <label for='customdatetimel'>For custom range first select 'Custom range' ^</label>
+            <label for='customdatetimeh'>then enter start and end datetime:-</label><br><br>
+            <input name='customdatetimel' type="datetime-local"><input name='customdatetimeh' type='datetime-local'><br>
             <button type="submit" name="button">GO</button>
           </form>
         </div>
-        {% else %}
-        {% endif %}
+        
       </div>
       <h3>Log Entries</h3>
       <table class="table table-bordered">
