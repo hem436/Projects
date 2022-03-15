@@ -7,24 +7,34 @@
   </head>
 
   <body>
-    <div class="col-sm-2 d-flex justify-content-center">
-      <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
+    <div class="row">
+      <div class="col-2 d-flex justify-content-center">
+        <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
+      </div>
+      <div class="col-8 text-center">
+      <h1>Update Tracker:{{tracker.name}}</h1><br><br>
+      </div>
+      <div class="col-2 text-center">
+      <a href="/" class="h4 logout">Home_</a>|
+      <a href="/logout" class="h4 logout">_Logout</a>
+      </div>
     </div>
-    <h1>update a Tracker</h1><a href="/logout" class="h5 logout">Logout</a><br><br>
-    <div class="update_tracker">
-      <form class="tracker_form" action="/tracker/{{tracker.tracker_id}}/update" method="post">
-        <h2>{{tracker.tracker_id}}</h2>
-        <label for="name">Enter name of tracker:</label><input type="text" name="name" value="{{tracker.name}}" required><br>
-        <label for="desc">Enter description of tracker:</label><input type="text" value="{{tracker.desc}}" name="desc"><br>
-        <label for="type">Select tracker type:</label><select name="type" >
-          <option value="Integer" {% if tracker.type=="Integer"%}selected{% endif %}>Integer</option>
-          <option value="Numeric" {% if tracker.type=="Numeric"%}selected{% endif %}>Numeric(Float)</option>
-          <option value="Multiple-choice" {% if tracker.type=="Multiple-choice"%}selected{% endif %}>Multiple-Choice</option>
-        </select><br>
-        <label for="settings">Settings(Separated by comma):</label><input type="text" name="settings" value="{{tracker.settings}}"><br>
-        <button type="submit" name="submit">Update Tracker</button>
-      </form>
-    </div>
+    <div class=" row update_tracker">
+      <div class="col-10 d-flex justify-content-center h4">
+        <form class="tracker_form" action="/tracker/{{tracker.tracker_id}}/update" method="post">
+          <h2>Tracker_id: {{tracker.tracker_id}}</h2>
+          <label for="name">Enter name of tracker:</label><input type="text" name="name" value="{{tracker.name}}" required><br>
+          <label for="desc">Enter description of tracker:</label><input type="text" value="{{tracker.desc}}" name="desc"><br>
+          <label for="type">Select tracker type:</label><select name="type" >
+            <option value="Integer" {% if tracker.type=="Integer"%}selected{% endif %}>Integer</option>
+            <option value="Numeric" {% if tracker.type=="Numeric"%}selected{% endif %}>Numeric(Float)</option>
+            <option value="Multiple-choice" {% if tracker.type=="Multiple-choice"%}selected{% endif %}>Multiple-Choice</option>
+          </select><br>
+          <label for="settings">Settings(Separated by comma):</label><input type="text" name="settings" value="{{tracker.settings}}"><br>
+          <button type="submit" name="submit">Update Tracker</button>
+        </form>
+      </div>
+    
   </body>
 
 </html>

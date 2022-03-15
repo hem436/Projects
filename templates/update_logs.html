@@ -6,26 +6,37 @@
     <title></title>
   </head>
   <body>
-    <div class="col-sm-2 d-flex justify-content-center">
-      <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{log.parent.parent.username}}</span>
+    <div class="row">
+      <div class="col-2 d-flex justify-content-center">
+          <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{log.parent.parent.username}}</span>
+       </div>
+      <div class="col-8  text-center">
+        <h2>Update the log with id {{log.log_id}}</h2>
+      </div>
+      <div class="col-2 text-center">
+      <a href="/" class="h4 logout">Home_</a>|
+      <a href="/logout" class="h4 logout">_Logout</a>
+      </div>
+    </div><br><br>
+    <div class="row">
+      <div class="col-8 offset-2 d-flex justify-content-center h4">
+        <form class="update_log" action="/{{log.log_id}}/log/update" method="post">
+          <label for="value">Timestamp:</label><input type="datetime" name="time" value="{{log.log_datetime.strftime('%d/%b/%Y, %H:%M:%S.%f')}}"><br>
+          <label for="type">Tracker type</label><input type="text" name="type" value="{{log.parent.type}}" disabled><br>
+          {% if log.parent.type=="Multiple-choice" -%}
+          <label for="value">Update value of log:</label><select name="value" value="{{log.log_value}}">
+            {% for i in log.parent.settings.split(',') -%}
+            <option value={{i}}>{{i}}</option>
+            {% endfor %}
+          </select><br>
+          {% elif log.parent.type=="Integer" %}
+          <label for="value">Update value of log as integer:</label><input type="number" name="value" value="{{log.log_value}}" required><br>
+          {% elif log.parent.type=="Numeric" %}
+          <label for="value">Update value of log as float:</label><input type="number" name="value" step='0.001' placeholder="{{log.log_value}}" required><br>
+          {% endif %}
+          <label for="note">Update note for log:</label><input type="text" name="note" value="{{log.note}}"><br>
+          <button type="submit" name="submit">Add log</button>
+        </form>
     </div>
-    <h2>Update the log with id {{log.log_id}}</h2>
-    <form class="update_log" action="/{{log.log_id}}/log/update" method="post">
-      <label for="value">Timestamp:</label><input type="datetime" name="time" value="{{log.log_datetime.strftime('%d/%b/%Y, %H:%M:%S.%f')}}"><br>
-      <label for="type">Tracker type</label><input type="text" name="type" value="{{log.parent.type}}" disabled><br>
-      {% if log.parent.type=="Multiple-choice" -%}
-      <label for="value">Update value of log:</label><select name="value" value="{{log.log_value}}">
-        {% for i in log.parent.settings.split(',') -%}
-        <option value={{i}}>{{i}}</option>
-        {% endfor %}
-      </select><br>
-      {% elif log.parent.type=="Integer" %}
-      <label for="value">Update value of log as integer:</label><input type="number" name="value" value="{{log.log_value}}" required><br>
-      {% elif log.parent.type=="Numeric" %}
-      <label for="value">Update value of log as float:</label><input type="number" name="value" step='0.001' placeholder="{{log.log_value}}" required><br>
-      {% endif %}
-      <label for="note">Update note for log:</label><input type="text" name="note" value="{{log.note}}"><br>
-      <button type="submit" name="submit">Add log</button>
-    </form>
   </body>
 </html>
