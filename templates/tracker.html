@@ -8,7 +8,7 @@
   <body>
     <div class="row">
       <div class="col-sm-2 d-flex justify-content-center">
-         <img src='static/userimg'> {{user.username}}</img>
+        <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
       </div>
       <div class="col-sm-6 d-flex justify-content-center">
         <h1>Tracker name: {{tracker.name}}</h1>
@@ -47,6 +47,7 @@
           {% endfor %}
         </thead>
       </table>
-      <button type="button"><a href="/{{tracker.tracker_id}}/log/add"><h2>ADD LOG</h2></a></button>
+
+      <button class="align-self-center" type="button"><a class="h4" href="/{{tracker.tracker_id}}/log/add">Add Log</a></button>
   </body>
 </html>

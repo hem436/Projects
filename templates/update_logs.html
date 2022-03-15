@@ -5,6 +5,9 @@
     <title></title>
   </head>
   <body>
+    <div class="col-sm-2 d-flex justify-content-center">
+      <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
+    </div>
     <h2>Update the log with id {{log.log_id}}</h2>
     <form class="update_log" action="/{{log.log_id}}/log/update" method="post">
       <label for="value">Timestamp:</label><input type="datetime" name="time" value="{{log.log_datetime}}"><br>

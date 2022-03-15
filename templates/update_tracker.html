@@ -6,7 +6,10 @@
   </head>
 
   <body>
-    <h1>update a Tracker</h1><a href="/logout" class="logout">Logout</a><br><br>
+    <div class="col-sm-2 d-flex justify-content-center">
+      <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px"/>{{user.username}}</span>
+    </div>
+    <h1>update a Tracker</h1><a href="/logout" class="h5 logout">Logout</a><br><br>
     <div class="update_tracker">
       <form class="tracker_form" action="/tracker/update" method="post">
         <h2>{{tracker.tracker_id}}</h2>
