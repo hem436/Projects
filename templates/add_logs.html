@@ -19,7 +19,6 @@
         <h3><a href="/main">Home </a>_|_<a href="/logout"> Logout</a></h3>
       </div>
     </div><br><br>
-
     <div class="row add_log">
       <div class="col-sm-8 offset-2 d-flex justify-content-center">
         <form id="log_form" action="add" method="post">
@@ -50,7 +49,7 @@
               {% elif t.type=='Time' -%}
               <label for="value">Time Duration:</label>
               <input type="text" name="value" value="{{timedict.duration}}">
-        </form>
+              </form>
               <form id="time" action="add" method="get">
                 <label for="start">Record Start and End time:</label><br>
                 <input class="i" type="time" name="start" value="{{timedict.start}}" step='any'>

@@ -6,6 +6,7 @@ from flask_login import LoginManager,login_user,login_required,logout_user,curre
 from datetime import datetime
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from matplotlib.dates import DateFormatter
 import random as r
 
 #app initialization
@@ -140,9 +141,12 @@ def view_tl(tracker_id):
             elif t.type=='Numeric':
                 plt.ylabel('Float')
                 y.append(float(i.log_value))
-            else:
-                plt.ylabel('Settings')
+            elif t.type=='Multiple-choice':
+                plt.ylabel('Options')
                 y.append(i.log_value)
+            elif t.type=='Time':
+                ax.yaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+                y.append(datetime.strptime(i.log_value,"%H:%M:%S"))
     plt.plot(x,y,marker='o',color='b',linestyle='--')
     plt.gcf().autofmt_xdate()
     plt.savefig('static/chart.png')
@@ -200,6 +204,8 @@ def add_logs(tracker_id):
     if request.method=='POST':
         try:
             value=request.form.get('value')
+            if t.type=='Time':
+              check=datetime.strptime(value,'%H:%M:%S')
             log_datetime=datetime.strptime(request.form.get("time"),'%d/%b/%Y, %H:%M:%S.%f')
             l=log(tracker_id=tracker_id,log_datetime=log_datetime,note=request.form.get('note'),log_value=value)
             db.session.add(l)
@@ -224,14 +230,13 @@ def add_logs(tracker_id):
             e=''
         d=''
         if s!='' and e!='':
-            print(request.args,datetime.strptime(e,'%H:%M:%S')-datetime.strptime(s,'%H:%M:%S'))
             d=datetime.strptime(e,'%H:%M:%S')-datetime.strptime(s,'%H:%M:%S')
         timedict={'start':s,'end':e,'duration':d}
     return render_template('add_logs.html',t=t,datetime=datetime,timedict=timedict)
 
 @app.route('/<int:log_id>/log/update',methods=['GET','POST'])
 @login_required
-def update_log(log_id):
+def update_log(log_id):#############more validation needed#######
     #validation
     if (log_id,) not in db.session.query(log.log_id).all():
         return notfound('log_id_not_found')
@@ -249,7 +254,7 @@ def update_log(log_id):
 
 @app.route('/<int:log_id>/log/delete',methods=['GET','POST'])
 @login_required
-def delete_log(log_id):######deletevalidation####################
+def delete_log(log_id):
     #validation
     if (log_id,) not in db.session.query(log.log_id).all():
         return notfound('log_id_not_found')
