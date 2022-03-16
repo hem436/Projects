@@ -195,7 +195,7 @@ def delete_tracker(tracker_id):
 #-----------------------------logs---------------------------
 @app.route('/<int:tracker_id>/log/add',methods=['GET','POST','PUT'])
 @login_required
-def add_logs(tracker_id):
+def add_logs(tracker_id): #
     #Validation
     if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
         return notfound('tracker_id_not_found')

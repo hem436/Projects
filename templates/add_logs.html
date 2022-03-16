@@ -25,6 +25,7 @@
           <h3 align='center'>Log for tracker: ({{t.tracker_id}}) {{t.name}}</h3>
           <div class="h5"><br><br>
             <div class="form-group-row">
+              <h6>Tracker Description:{{t.desc}}</h6>
               <label for="col-sm-2 col-form-label col-form-label-sm value">Timestamp:</label>
               <div class="col-sm-4">
               <input class="datetime" type="text" name="time" value="{{ datetime.now().strftime('%d/%b/%Y, %H:%M:%S.%f') }}">
@@ -42,13 +43,13 @@
               </select><br><br>
               {% elif t.type=='Integer' %}
               <label for="value">Enter value of log as integer:</label>
-              <input class="form-control" type="number" name="value" required><br><br>
+              <input class="form-control" type="number" name="value" placeholder="Int" required><br>
               {% elif t.type=='Numeric' %}
               <label for="value">Enter value of log as float:</label>
-              <input class="form-control" type="number" name="value" step='0.001' required><br><br>
+              <input class="form-control" type="number" name="value" step='0.001' placeholder="float" required><br>
               {% elif t.type=='Time' -%}
               <label for="value">Time Duration:</label>
-              <input type="text" name="value" value="{{timedict.duration}}">
+              <input type="text" name="value" value="{{timedict.duration}}" placeholder="Time duration" required>
               </form>
               <form id="time" action="add" method="get">
                 <label for="start">Record Start and End time:</label><br>
