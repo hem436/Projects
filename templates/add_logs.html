@@ -27,27 +27,28 @@
             <div class="form-group-row">
               <label for="col-sm-2 col-form-label col-form-label-sm value">Timestamp:</label>
               <div class="col-sm-4">
-              <input class="input" type="text" name="time" value="{{ datetime.now().strftime('%d/%b/%Y, %H:%M:%S.%f') }}">
+              <input class="datetime" type="text" name="time" value="{{ datetime.now().strftime('%d/%b/%Y, %H:%M:%S.%f') }}">
               </div>
             </div>
-              <label for="type">Tracker type:</label>
-              <input class="input" type="text" name="type" value="{{t.type}}" disabled><br><br>
+            <div class="form-group-row">
+              <label class="col-form-label" for="type">Tracker type:</label>
+              <input class="input" type="text" name="type" value="{{t.type}}" disabled><br>
               {% if t.type=="Multiple-choice" -%}
-              <label for="value">Select tracker type:</label>
-              <select name="value" >
+              <label class="col-form-label" for="value">Select tracker type:</label>
+              <select class="" name="value" >
                 {% for i in t.settings.split(',') -%}
                 <option value={{i}}>{{i}}</option>
                 {% endfor %}
               </select><br><br>
               {% elif t.type=='Integer' %}
               <label for="value">Enter value of log as integer:</label>
-              <input type="number" name="value" required><br><br>
+              <input class="form-control" type="number" name="value" required><br><br>
               {% elif t.type=='Numeric' %}
               <label for="value">Enter value of log as float:</label>
-              <input type="number" name="value" step='0.001' required><br><br>
+              <input class="form-control" type="number" name="value" step='0.001' required><br><br>
               {% endif %}
               <label class="input-group">Enter note for log:</label>
-              <textarea name="note" rows="2" cols="42" placeholder="Note/Remark"></textarea><br><br>
+              <textarea class="form-control" name="note" rows="2" cols="42" placeholder="Note/Remark"></textarea><br>
               <button type="submit" name="submit">Add log</button>
           </div>
         </form>

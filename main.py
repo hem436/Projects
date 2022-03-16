@@ -53,6 +53,7 @@ def signup():
             db.session.commit()
             return login()
         return redirect('/notfound/User already exists.')
+    return render_template('signup.html')
 
 @app.route('/logout')
 @login_required
@@ -128,7 +129,7 @@ def view_tl(tracker_id):
             llim,hlim,comp='','',''
     else:
       llim,hlim,comp='','',''
-    
+
     for i in tl:
         if i.log_datetime.strftime(comp)>=llim and i.log_datetime.strftime(comp)<=hlim:
             x.append(i.log_datetime)
@@ -238,7 +239,6 @@ def delete_log(log_id):######deletevalidation####################
     db.session.delete(l)
     db.session.commit()
     return view_tl(t)
-
 #====================================================================================
 
 if __name__=='__main__':
