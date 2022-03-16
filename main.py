@@ -84,7 +84,7 @@ def add_tracker():
         if name in [i.name for i in User.query.get(u_id).trackers]:
             return notfound('Tracker name should be unique')
 
-        if type!='Integer' and type!='Numeric':
+        if type=='Multiple-choice':
             if set=="":
                 return notfound('Tracker setting not valid, Multi-Choice should have setting separated by comma.')
         elif set!="":
@@ -189,10 +189,10 @@ def delete_tracker(tracker_id):
         print('----tracker_delete_dberror------',e)
     return main()
 #-----------------------------logs---------------------------
-@app.route('/<int:tracker_id>/log/add',methods=['GET','POST'])
+@app.route('/<int:tracker_id>/log/add',methods=['GET','POST','PUT'])
 @login_required
 def add_logs(tracker_id):
-    #Validarion
+    #Validation
     if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
         return notfound('tracker_id_not_found')
     t=tracker.query.get(tracker_id)
@@ -204,11 +204,30 @@ def add_logs(tracker_id):
             l=log(tracker_id=tracker_id,log_datetime=log_datetime,note=request.form.get('note'),log_value=value)
             db.session.add(l)
             db.session.commit()
+            return view_tl(tracker_id)
         except:
             db.session.rollback()
             print('-------------db_log_add_error--------------')
-        return view_tl(tracker_id)
-    return render_template('add_logs.html',t=t,datetime=datetime)
+    timedict={'start':'','end':'','duration':''}
+    if request.method=='GET':
+        if request.args.get('start'):
+            s=request.args.get('start')
+        elif request.args.get('startb')=="start":
+            s=datetime.now().strftime('%H:%M:%S')
+        else:
+            s=''
+        if request.args.get('end'):
+            e=request.args.get('end')
+        elif request.args.get('endb')=="end":
+            e=datetime.now().strftime('%H:%M:%S')
+        else:
+            e=''
+        d=''
+        if s!='' and e!='':
+            print(request.args,datetime.strptime(e,'%H:%M:%S')-datetime.strptime(s,'%H:%M:%S'))
+            d=datetime.strptime(e,'%H:%M:%S')-datetime.strptime(s,'%H:%M:%S')
+        timedict={'start':s,'end':e,'duration':d}
+    return render_template('add_logs.html',t=t,datetime=datetime,timedict=timedict)
 
 @app.route('/<int:log_id>/log/update',methods=['GET','POST'])
 @login_required
@@ -226,7 +245,7 @@ def update_log(log_id):
         db.session.query(log).filter(log.log_id==log_id).update({'log_value':log_value,'note':log_note,'log_datetime':log_datetime})
         db.session.commit()
         return view_tl(l.tracker_id)
-    return render_template('update_logs.html',log=l)
+    return render_template('update_logs.html',datetime=datetime,log=l)
 
 @app.route('/<int:log_id>/log/delete',methods=['GET','POST'])
 @login_required

@@ -33,6 +33,8 @@
           <label for="value">Update value of log as integer:</label><input type="number" name="value" value="{{log.log_value}}" required><br>
           {% elif log.parent.type=="Numeric" %}
           <label for="value">Update value of log as float:</label><input type="number" name="value" step='0.001' placeholder="{{log.log_value}}" required><br>
+          {% elif log.parent.type=="Time" %}
+          <label for="value">Update value of log as time:</label><input type="text" name="value" value='{{log.log_value}}' required><br>
           {% endif %}
           <label for="note">Update note for log:</label><input type="text" name="note" value="{{log.note}}"><br>
           <button type="submit" name="submit">Add log</button>

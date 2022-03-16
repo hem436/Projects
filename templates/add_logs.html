@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/main.css">
     <title></title>
   </head>
 
@@ -21,7 +22,7 @@
 
     <div class="row add_log">
       <div class="col-sm-8 offset-2 d-flex justify-content-center">
-        <form class="log_form" action="add" method="post">
+        <form id="log_form" action="add" method="post">
           <h3 align='center'>Log for tracker: ({{t.tracker_id}}) {{t.name}}</h3>
           <div class="h5"><br><br>
             <div class="form-group-row">
@@ -46,10 +47,22 @@
               {% elif t.type=='Numeric' %}
               <label for="value">Enter value of log as float:</label>
               <input class="form-control" type="number" name="value" step='0.001' required><br><br>
+              {% elif t.type=='Time' -%}
+              <label for="value">Time Duration:</label>
+              <input type="text" name="value" value="{{timedict.duration}}">
+        </form>
+              <form id="time" action="add" method="get">
+                <label for="start">Record Start and End time:</label><br>
+                <input class="i" type="time" name="start" value="{{timedict.start}}" step='any'>
+                <button form="time" type="submit" name="startb" value="start">Start tracking time</button><br>
+                <input class="i" type="time" name="end" value="{{timedict.end}}" step='any'>
+                <button form="time" type="submit" name="endb" value="end">End tracking time</button>
+              </form>
               {% endif %}
+
               <label class="input-group">Enter note for log:</label>
               <textarea class="form-control" name="note" rows="2" cols="42" placeholder="Note/Remark"></textarea><br>
-              <button type="submit" name="submit">Add log</button>
+              <button form="log_form" type="submit" name="submit">Add log</button>
           </div>
         </form>
       </div>
