@@ -7,7 +7,6 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.dates import DateFormatter
-import random as r
 
 #app initialization
 app = Flask(__name__)
@@ -70,7 +69,7 @@ def notfound(error):
 @app.route('/main')
 @login_required
 def main():
-    return render_template('main.html',user=current_user)
+    return render_template('main.html',user=current_user,datetime=datetime)
 
 @app.route('/tracker/add',methods=['GET','POST'])
 @login_required
@@ -207,6 +206,8 @@ def add_logs(tracker_id): #
             if t.type=='Time':
               check=datetime.strptime(value,'%H:%M:%S')
             log_datetime=datetime.strptime(request.form.get("time"),'%d/%b/%Y, %H:%M:%S.%f')
+            if t.lastupdate==None or t.lastupdate<log_datetime:
+                t.lastupdate=log_datetime
             l=log(tracker_id=tracker_id,log_datetime=log_datetime,note=request.form.get('note'),log_value=value)
             db.session.add(l)
             db.session.commit()

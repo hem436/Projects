@@ -19,6 +19,7 @@ class tracker(db.Model):
     desc=db.Column(db.String)
     type=db.Column(db.String,nullable=False)
     settings=db.Column(db.String)
+    lastupdate=db.Column(db.DateTime)
     logs=db.relationship("log",cascade='all', backref="parent")
 
 class log(db.Model):
