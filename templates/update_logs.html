@@ -26,24 +26,24 @@
           <div class="mb-3 row">
           <label class="col-4 offset-2" for="type">Tracker type</label><input class="col-4" type="text" name="type" value="{{log.parent.type}}" disabled></div>
           {% if log.parent.type=="Multiple-choice" -%}
-          <div class='mb-3 row'> 
-            <label class="col-4 offset-2" for="value">Update value of log:</label><select class="col-4" name="value" value="{{log.log_value}}">
+          <div class='mb-3 row'>
+            <label class="col-4 offset-2" for="value">Update value of log:</label><select class="col-4" name="value">
             {% for i in log.parent.settings.split(',') -%}
-            <option value={{i}}>{{i}}</option>
+            <option value={{i}} {% if i==log.log_value %} selected {% endif %}>{{i}}</option>
             {% endfor %}
           </select></div>
           {% elif log.parent.type=="Integer" %}
-          <div class='mb-3 row'> 
+          <div class='mb-3 row'>
             <label class="col-4 offset-2" for="value">Update value of log as integer:</label><input class="col-4" type="number" name="value" value="{{log.log_value}}" required></div>
           {% elif log.parent.type=="Numeric" %}
-          <div class='mb-3 row'> 
-            <label class="col-4 offset-2"for="value">Update value of log as float:</label><input class="col-4" type="number" name="value" step='0.001' placeholder="{{log.log_value}}" required></div>
+          <div class='mb-3 row'>
+            <label class="col-4 offset-2"for="value">Update value of log as float:</label><input class="col-4" type="number" name="value" step='0.001' value="{{log.log_value}}" required></div>
           {% elif log.parent.type=="Time" %}
-          <div class='mb-3 row'> 
+          <div class='mb-3 row'>
             <label class="col-4 offset-2" for="value">Update value of log as time:</label><input class="col-4" type="text" name="value" value='{{log.log_value}}' required></div>
           {% endif %}
-          <div class='mb-3 row'> 
-            <label class="col-4 offset-2" for="note">Update note for log:</label><input class="col-4" type="text" name="note" value="{{log.note}}"></div>
+          <div class='mb-3 row'>
+            <label class="col-4 offset-2" for="note">Update note for log:</label><input class="col-4" type="text" name="note" value="{{log.note}}" placeholder="Note/Remark"></div>
           <div class="text-center"><button type="submit" name="submit">Add log</button></div>
         </form>
     </div>
