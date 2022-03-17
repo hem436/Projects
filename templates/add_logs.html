@@ -19,53 +19,61 @@
         <h3><a href="/main">Home </a>_|_<a href="/logout"> Logout</a></h3>
       </div>
     </div><br><br>
-    <div class="row add_log">
-      <div class="col-sm-8 offset-2 d-flex justify-content-center">
+    <div class="container add_log">
+      <div class="mb-3 row d-flex justify-content-center">
+<h3 align="center">Log for tracker: ({{t.tracker_id}}) {{t.name}}</h3>
+        <br><br>
         <form id="log_form" action="add" method="post">
-          <h3 align='center'>Log for tracker: ({{t.tracker_id}}) {{t.name}}</h3>
-          <div class="h5"><br><br>
-            <div class="form-group-row">
-              <h6>Tracker Description:{{t.desc}}</h6>
-              <label for="col-sm-2 col-form-label col-form-label-sm value">Timestamp:</label>
-              <div class="col-sm-4">
-              <input class="datetime" type="text" name="time" value="{{ datetime.now().strftime('%d/%b/%Y, %H:%M:%S.%f') }}">
-              </div>
+
+            <div class="mb-3 row">
+              <h6 class="col-8 offset-2 text-muted text-center">Tracker Description:{{t.desc}}</h6>
+              <label class="col-3 offset-3" for="time">Timestamp:</label>
+              <input class="col-3" type="text" name="time" value="{{ datetime.now().strftime('%d/%b/%Y, %H:%M:%S.%f') }}">
             </div>
-            <div class="form-group-row">
-              <label class="col-form-label" for="type">Tracker type:</label>
-              <input class="input" type="text" name="type" value="{{t.type}}" disabled><br>
+            <div class="mb-3 row">
+              <label class="col-3 offset-3" for="type">Tracker type:</label>
+              <input class="col-3" type="text" name="type" value="{{t.type}}" disabled><br>
+            </div>
+            <div class="mb-3 row">
               {% if t.type=="Multiple-choice" -%}
-              <label class="col-form-label" for="value">Select tracker type:</label>
-              <select class="" name="value" >
+              <label class="col-3 offset-3" for="value">Select tracker type:</label>
+              <select class="col-3" name="value" >
                 {% for i in t.settings.split(',') -%}
                 <option value={{i}}>{{i}}</option>
                 {% endfor %}
-              </select><br><br>
+              </select></div></form>
               {% elif t.type=='Integer' %}
-              <label for="value">Enter value of log as integer:</label>
-              <input class="form-control" type="number" name="value" placeholder="Int" required><br>
+              <label class="col-3 offset-3" for="value">Enter value of log as integer:</label>
+              <input class="col-3" type="number" name="value" placeholder="Int" required></div></form>
               {% elif t.type=='Numeric' %}
-              <label for="value">Enter value of log as float:</label>
-              <input class="form-control" type="number" name="value" step='0.001' placeholder="float" required><br>
+              <label class="col-3 offset-3" for="value">Enter value of log as float:</label>
+              <input class="col-3" type="number" name="value" step='0.001' placeholder="float" required></div></form>
               {% elif t.type=='Time' -%}
-              <label for="value">Time Duration:</label>
-              <input type="text" name="value" value="{{timedict.duration}}" placeholder="Time duration" required>
+              <label class="col-3 offset-3" for="value">Time Duration:</label>
+              <input class="col-3" type="text" name="value" value="{{timedict.duration}}" placeholder="Time duration" required></div>
               </form>
               <form id="time" action="add" method="get">
-                <label for="start">Record Start and End time:</label><br>
-                <input class="i" type="time" name="start" value="{{timedict.start}}" step='any'>
-                <button form="time" type="submit" name="startb" value="start">Start tracking time</button><br>
-                <input class="i" type="time" name="end" value="{{timedict.end}}" step='any'>
-                <button form="time" type="submit" name="endb" value="end">End tracking time</button>
+              <div class="mb-3 row">
+                <label class="col-3 offset-3" for="start">Record Start and End time:</label><br></div>
+              <div class="row">
+                <input class="col-3 offset-3" type="time" name="start" value="{{timedict.start}}" step='any'>
+                <button class="col-3" form="time" type="submit" name="startb" value="start">Start tracking time</button></div><br>
+              <div class="row">
+                <input class="col-3 offset-3" type="time" name="end" value="{{timedict.end}}" step='any'>
+                <button class="col-3" form="time" type="submit" name="endb" value="end">End tracking time</button>
+              </div>
               </form>
               {% endif %}
-
-              <label class="input-group">Enter note for log:</label>
-              <textarea class="form-control" name="note" rows="2" cols="42" placeholder="Note/Remark"></textarea><br>
-              <button form="log_form" type="submit" name="submit">Add log</button>
-          </div>
-        </form>
-      </div>
+            </div>
+            <div class="row">
+              <label for="note" class="col-3 offset-3">Enter note for log:</label>
+              <textarea form='log_form' class="col-6 offset-3" name="note" placeholder="Note/Remark" align="center"></textarea>
+            </div><br>
+          <div class="text-center h5"><button form="log_form" type="submit" name="submit">Add log</button></div> 
+              
+      
     </div>
+  </div>
+
   </body>
 </html>
