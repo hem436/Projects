@@ -244,7 +244,7 @@ def update_log(log_id):#############more validation needed#######
     l=log.query.get(log_id)
     #EndV
     if request.method=='POST':
-        log_value=request.form.get("value")
+        log_value=request.form.get("value")#
         log_note=request.form.get("note")
         log_datetime=datetime.strptime(request.form.get("time"),'%d/%b/%Y, %H:%M:%S.%f')
         #print(log_datetime)
@@ -265,6 +265,6 @@ def delete_log(log_id):
     db.session.commit()
     return view_tl(t)
 #====================================================================================
-
+#app run
 if __name__=='__main__':
     app.run()

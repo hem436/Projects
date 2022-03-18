@@ -37,7 +37,7 @@
           </div>
           <div class="mb-3 row">
             {% if t.type=="Multiple-choice" -%}
-            <label class="col-3 offset-3" for="value">Select tracker type:</label>
+            <label class="col-3 offset-3" for="value">Select tracker value:</label>
             <select class="col-3" name="value">
               {% for i in t.settings.split(',') -%}
               <option value={{i}}>{{i}}</option>

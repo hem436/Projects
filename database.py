@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app=current_app
 db=SQLAlchemy(app)
 db.init_app(app)
-
+#tables
 class User(db.Model,UserMixin):
     id=db.Column(db.Integer,primary_key=True,autoincrement=True)
     username=db.Column(db.String,nullable=False,unique=True)
