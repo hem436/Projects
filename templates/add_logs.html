@@ -17,9 +17,13 @@
         <h1>Add a log</h1>
       </div>
       <div class="col-sm-3 d-flex justify-content-center">
-        <h3><a href="/main">Home </a>_|_<a href="/logout"> Logout</a></h3>
+        <h3><a href="/logout"> Logout</a></h3>
       </div>
-    </div><br><button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button><br>
+    </div><br>
+    <div class="row">
+      <div class="col-3 text-center h5"><button type="button"><a href="/main">Home </a></button><button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button>
+      </div>
+    </div><br>
     <div class="container add_log">
       <div class="mb-3 row d-flex justify-content-center">
         <h3 align="center">Log for tracker: ({{t.tracker_id}}) {{t.name}}</h3>

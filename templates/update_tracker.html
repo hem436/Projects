@@ -20,8 +20,11 @@
         <a href="/" class="logout">Home_</a>|
         <a href="/logout" class=" logout">_Logout</a>
       </div>
-    </div>
-    <button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button>
+    </div><br>
+    <div class="row">
+      <div class="col-3 text-center h5"><button type="button"><a href="/main">Home </a></button><button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button>
+      </div>
+    </div><br>
     <div class="row update_tracker">
       <div class="col-8 offset-2 h5">
         <form class="tracker_form" action="/tracker/{{tracker.tracker_id}}/update" method="post">

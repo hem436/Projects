@@ -17,10 +17,14 @@
         <h1>Tracker name: {{tracker.name}}</h1>
       </div>
       <div class="col-sm-3 d-flex justify-content-center">
-        <h3><a href="/main">Home</a>|<a href="/logout">Logout</a></h3>
+        <h3><a href="/logout">Logout</a></h3>
       </div>
     </div>
-    <br><br>
+    <br><div class="row">
+      <div class="col-3 text-center h5">
+        <button type="button"><a href="/main">Home </a></button>
+        <button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button></div>
+    </div><br>
     <div class="row">
       <h2 align='center'><u>Trendline:</u></h2>
       <h6 class="text-center text-muted">Tracker Description: {{tracker.desc}}</h6>

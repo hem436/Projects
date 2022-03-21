@@ -8,7 +8,6 @@ from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.dates import DateFormatter
 import csv
-
 #app initialization
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quantified_self_database.sqlite3'
@@ -76,23 +75,23 @@ def main():
 @login_required
 def add_tracker():
     if request.method=='POST':
-        u_id=current_user.get_id()
-        name=request.form.get('name')
-        desc=request.form.get('desc')
-        type=request.form.get('type')
-        set=request.form.get('settings')
-        #---validation----
-        if name in [i.name for i in User.query.get(u_id).trackers]:
-            return notfound('Tracker name should be unique')
-
-        if type=='Multiple-choice':
-            if set=="":
-                return notfound('Tracker setting not valid, Multi-Choice should have setting separated by comma.')
-        elif set!="":
-            set=""
-        #-----------------
-        add=tracker(user_id=u_id,name=name,desc=desc,type=type,settings=set)
         try:
+            u_id=current_user.get_id()
+            name=request.form.get('name')
+            desc=request.form.get('desc')
+            type=request.form.get('type')
+            set=request.form.get('settings')
+            #---validation----
+            if name in [i.name for i in User.query.get(u_id).trackers]:
+                return notfound('Tracker name should be unique')
+    
+            if type=='Multiple-choice':
+                if set=="":
+                    return notfound('Tracker setting not valid, Multi-Choice should have setting separated by comma.')
+            elif set!="":
+                set=""
+            #-----------------
+            add=tracker(user_id=u_id,name=name,desc=desc,type=type,settings=set)
             db.session.add(add)
             db.session.commit()
             return main()
@@ -104,67 +103,70 @@ def add_tracker():
 @app.route('/tracker/<int:tracker_id>',methods=['GET','POST'])
 @login_required
 def view_tl(tracker_id):
-    #Validarion
-    if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
-        return notfound('tracker_id_not_found')
-    t=tracker.query.get(tracker_id)
-    tl=log.query.filter(log.tracker_id==tracker_id).order_by(log.log_datetime)
-    x,y,file,filename=[],[],None,None
-    fig=plt.figure(figsize=(8,5))
-    ax = fig.gca()
-    if request.method=='POST' and request.form.get('period'):
-        print(request.form)#to remove bug from direct function call
-        p=request.form.get('period')
-        if p=='Custom':
-            llim=request.form['customdatetimel']
-            hlim=request.form['customdatetimeh']
-            comp='%Y-%m-%dT%H:%M'
-        elif p=='Today':
-            llim=datetime.today().strftime('%d/%m/%y')
-            hlim=llim
-            comp='%d/%m/%y'
-        elif p=='1Month':
-            llim=datetime.today().strftime('%m/%y')
-            hlim=llim
-            comp='%m/%y'
-        elif p=='All':
-            llim,hlim,comp='','',''
-        if request.form.get('button')=="export_data":
-            filename=request.form.get("filename")
-            file=open(f'static/{filename}.csv','w')
-            w=csv.writer(file)
-    else:
-      llim,hlim,comp='','',''
-
-    for i in tl:
-        if i.log_datetime.strftime(comp)>=llim and i.log_datetime.strftime(comp)<=hlim:
-            x.append(i.log_datetime)
-            if t.type=='Integer':
-                ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-                plt.ylabel('Int')
-                y.append(int(i.log_value))
-            elif t.type=='Numeric':
-                plt.ylabel('Float')
-                y.append(float(i.log_value))
-            elif t.type=='Multiple-choice':
-                plt.ylabel('Options')
-                y.append(i.log_value)
-            elif t.type=='Time':
-                ax.yaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-                y.append(datetime.strptime(i.log_value,"%H:%M:%S"))
-    plt.plot(x,y,marker='o',color='b',linestyle='--')
-    plt.gcf().autofmt_xdate()
-    plt.savefig('static/chart.png')
-    if file:
-        w.writerow(['Timestamp','Log_value'])
-        for i in range(len(x)):
-            w.writerow((x[i],y[i]))
-        file.close()
-    if len(x)>0:
-        img='/static/chart.png'
-    else:
-        img=""
-    return render_template('tracker.html',tracker=t,chart=img,filename=filename)
+  try:
+        #Validarion
+        if (tracker_id,) not in db.session.query(tracker.tracker_id).all():
+            return notfound('tracker_id_not_found')
+        t=tracker.query.get(tracker_id)
+        tl=log.query.filter(log.tracker_id==tracker_id).order_by(log.log_datetime)
+        #---------------
+        x,y,file,filename=[],[],None,None
+        fig=plt.figure(figsize=(8,5))
+        ax = fig.gca()
+        if request.method=='POST' and request.form.get('period'):
+            p=request.form.get('period')
+            if p=='Custom':
+                llim=request.form['customdatetimel']
+                hlim=request.form['customdatetimeh']
+                comp='%Y-%m-%dT%H:%M'
+            elif p=='Today':
+                llim=datetime.today().strftime('%d/%m/%y')
+                hlim=llim
+                comp='%d/%m/%y'
+            elif p=='1Month':
+                llim=datetime.today().strftime('%m/%y')
+                hlim=llim
+                comp='%m/%y'
+            elif p=='All':
+                llim,hlim,comp='','',''
+            if request.form.get('button')=="export_data":
+                filename=request.form.get("filename")
+                file=open(f'static/exported_files/{filename}.csv','w')
+                w=csv.writer(file)
+        else:
+          llim,hlim,comp='','',''
+    
+        for i in tl:
+            if i.log_datetime.strftime(comp)>=llim and i.log_datetime.strftime(comp)<=hlim:
+                x.append(i.log_datetime)
+                if t.type=='Integer':
+                    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+                    plt.ylabel('Int')
+                    y.append(int(i.log_value))
+                elif t.type=='Numeric':
+                    plt.ylabel('Float')
+                    y.append(float(i.log_value))
+                elif t.type=='Multiple-choice':
+                    plt.ylabel('Options')
+                    y.append(i.log_value)
+                elif t.type=='Time':
+                    ax.yaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+                    y.append(datetime.strptime(i.log_value,"%H:%M:%S"))
+        plt.plot(x,y,marker='o',color='b',linestyle='--')
+        plt.gcf().autofmt_xdate()
+        plt.savefig('static/chart.png')
+        if file:
+            w.writerow(['Timestamp','Log_value'])
+            for i in range(len(x)):
+                w.writerow((x[i],y[i]))
+            file.close()
+        if len(x)>0:
+            img='/static/chart.png'
+        else:
+            img=""
+  except Exception as e:
+      print("e")
+  return render_template('tracker.html',tracker=t,chart=img,filename=filename)
 
 @app.route('/tracker/<int:tracker_id>/update',methods=['GET','POST'])
 @login_required#*************************
@@ -175,10 +177,9 @@ def update_tracker(tracker_id):
     t=tracker.query.get(tracker_id)
     if request.method=='POST':
         try:
-            if request.form.get('name')!=t.name or request.form.get('desc')!=t.desc or request.form.get('type')!=request.form.get('settings'):
+            if request.form.get('type')!=t.type or request.form.get('settings')!=t.settings:
                 db.session.query(log).filter(log.tracker_id==tracker_id).delete()
             updict={tracker.name:request.form['name'],tracker.desc:request.form['desc'],tracker.type:request.form['type'],tracker.settings:request.form['settings']}
-            print(updict)
             db.session.query(tracker).filter(tracker.tracker_id==tracker_id).update(updict)
             db.session.commit()
             return main()
@@ -253,12 +254,14 @@ def update_log(log_id):#############more validation needed#######
     if (log_id,) not in db.session.query(log.log_id).all():
         return notfound('log_id_not_found')
     l=log.query.get(log_id)
+    t=l.parent
     #EndV
     if request.method=='POST':
         log_value=request.form.get("value")#
         log_note=request.form.get("note")
         log_datetime=datetime.strptime(request.form.get("time"),'%d/%b/%Y, %H:%M:%S.%f')
-        #print(log_datetime)
+        if t.lastupdate==None or t.lastupdate<log_datetime:
+          t.lastupdate=log_datetime
         db.session.query(log).filter(log.log_id==log_id).update({'log_value':log_value,'note':log_note,'log_datetime':log_datetime})
         db.session.commit()
         return view_tl(l.tracker_id)
@@ -271,11 +274,17 @@ def delete_log(log_id):
     if (log_id,) not in db.session.query(log.log_id).all():
         return notfound('log_id_not_found')
     l=log.query.get(log_id)
-    t=l.tracker_id
+    t=l.parent
     db.session.delete(l)
-    db.session.commit()
-    return view_tl(t)
+    if t.lastupdate==l.log_datetime:
+      lastlog=log.query.filter(log.tracker_id==t.tracker_id).order_by(log.log_datetime.desc()).first()
+      if lastlog:
+        t.lastupdate=lastlog.log_datetime
+      else:
+        t.lastupdate=None
+      db.session.commit()
+    return view_tl(t.tracker_id)
 #====================================================================================
 #app run
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)

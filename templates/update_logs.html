@@ -11,17 +11,20 @@
   <body>
     <div class="row">
       <div class="col-2 d-flex justify-content-center">
-        <button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button>
         <span class="align-self-center"><img src='/static/userimg' width="40px" height="40px" />{{log.parent.parent.username}}</span>
       </div>
       <div class="col-8  text-center">
         <h2>Update the log with id {{log.log_id}}</h2>
       </div>
       <div class="col-2 text-center">
-        <a href="/" class="h4 logout">Home_</a>|
-        <a href="/logout" class="h4 logout">_Logout</a>
+        <a href="/logout" class="h4 logout">Logout</a>
       </div>
-    </div><br><br>
+    </div><br>
+    <div class="row">
+      <div class="col-3 text-center h5"><button type="button"><a href="/main">Home </a></button>
+        <button type="button" name="back" onclick="javascrpt:history.back()">Go Back</button>
+      </div>
+    </div><br>
     <div class="row">
       <div class="col-10 offset-1 h5">
         <form class="update_log" action="/{{log.log_id}}/log/update" method="post">
@@ -55,7 +58,7 @@
           <div class='mb-3 row'>
             <label class="col-4 offset-2" for="note">Update note for log:</label><input class="col-4" type="text" name="note" value="{{log.note}}" placeholder="Note/Remark">
           </div>
-          <div class="text-center"><button type="submit" name="submit">Add log</button></div>
+          <div class="text-center"><button type="submit" name="submit">Update log</button></div>
         </form>
       </div>
   </body>
