@@ -47,7 +47,7 @@
           <label for="filename">Filename</label>
           <input type="input" name="filename" placeholder="'file'--->file.csv">
           <button type="submit" name="button" value="export_data">Export</button>
-          {% if filename %}<a href="/static/{{filename}}.csv">Download file: {{filename}}.csv</a>{% endif %}
+          {% if filename %}<a href="/static/exported_files/{{filename}}.csv">Download file: {{filename}}.csv</a>{% endif %}
         </form>
       </div>
 

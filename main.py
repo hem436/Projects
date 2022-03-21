@@ -164,9 +164,11 @@ def view_tl(tracker_id):
             img='/static/chart.png'
         else:
             img=""
+        return render_template('tracker.html',tracker=t,chart=img,filename=filename)
   except Exception as e:
       print("e")
-  return render_template('tracker.html',tracker=t,chart=img,filename=filename)
+      return(main())
+  
 
 @app.route('/tracker/<int:tracker_id>/update',methods=['GET','POST'])
 @login_required#*************************
@@ -287,4 +289,4 @@ def delete_log(log_id):
 #====================================================================================
 #app run
 if __name__=='__main__':
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0')
