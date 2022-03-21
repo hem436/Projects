@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 #basic imports
 from flask_sqlalchemy import SQLAlchemy
-from flask import render_template, request,Flask,redirect
+from flask import render_template, request,Flask,redirect,flash
 from flask_login import LoginManager,login_user,login_required,logout_user,current_user
 from datetime import datetime
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.dates import DateFormatter
+import csv
 
 #app initialization
 app = Flask(__name__)
@@ -108,10 +109,11 @@ def view_tl(tracker_id):
         return notfound('tracker_id_not_found')
     t=tracker.query.get(tracker_id)
     tl=log.query.filter(log.tracker_id==tracker_id).order_by(log.log_datetime)
-    x,y=[],[]
+    x,y,file,filename=[],[],None,None
     fig=plt.figure(figsize=(8,5))
     ax = fig.gca()
-    if request.method=='POST' and request.form.get('period'):#to remove bug from direct function call
+    if request.method=='POST' and request.form.get('period'):
+        print(request.form)#to remove bug from direct function call
         p=request.form.get('period')
         if p=='Custom':
             llim=request.form['customdatetimel']
@@ -127,6 +129,10 @@ def view_tl(tracker_id):
             comp='%m/%y'
         elif p=='All':
             llim,hlim,comp='','',''
+        if request.form.get('button')=="export_data":
+            filename=request.form.get("filename")
+            file=open(f'static/{filename}.csv','w')
+            w=csv.writer(file)
     else:
       llim,hlim,comp='','',''
 
@@ -149,11 +155,16 @@ def view_tl(tracker_id):
     plt.plot(x,y,marker='o',color='b',linestyle='--')
     plt.gcf().autofmt_xdate()
     plt.savefig('static/chart.png')
+    if file:
+        w.writerow(['Timestamp','Log_value'])
+        for i in range(len(x)):
+            w.writerow((x[i],y[i]))
+        file.close()
     if len(x)>0:
         img='/static/chart.png'
     else:
         img=""
-    return render_template('tracker.html',tracker=t,chart=img)
+    return render_template('tracker.html',tracker=t,chart=img,filename=filename)
 
 @app.route('/tracker/<int:tracker_id>/update',methods=['GET','POST'])
 @login_required#*************************
@@ -267,4 +278,4 @@ def delete_log(log_id):
 #====================================================================================
 #app run
 if __name__=='__main__':
-    app.run()
+    app.run(debug=True)
