@@ -36,7 +36,7 @@
             <label class="col-6" for="desc">Enter new description of tracker:</label><input class="col-6" type="text" value="{{tracker.desc}}" name="desc">
           </div>
           <div class="mb-3 row">
-            <label class="col-6" for="type">Select new tracker type:</label><select class="col-6" name="type">
+            <label class="col-6" for="type">Select new tracker type (all logs will be deleted):</label><select class="col-6" name="type">
               <option value="Integer" {% if tracker.type=="Integer" %}selected{% endif %}>Integer</option>
               <option value="Numeric" {% if tracker.type=="Numeric" %}selected{% endif %}>Numeric(Float)</option>
               <option value="Multiple-choice" {% if tracker.type=="Multiple-choice" %}selected{% endif %}>Multiple-Choice</option>
